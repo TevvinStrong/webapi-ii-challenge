@@ -6,7 +6,7 @@ const router = express.Router();
 
 //*** Routes ***\\
 
-// Post
+// Post ----
 router.post('/api/posts', async (req, res) => {
     try {
         const createPosts = await Posts.insert(req.body);
@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get
-router.get('/api/posts/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
     const { id } = req.params;
 
     try {
@@ -47,7 +47,7 @@ router.get('/api/posts/:id', async (req, res) => {
 });
 
 // Delete
-router.delete('/api/posts/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
         const deletePosts = await Posts.remove(req.params.id);
         if (deletePosts > 0) {
@@ -61,18 +61,18 @@ router.delete('/api/posts/:id', async (req, res) => {
 });
 
 // Put
-router.put('/api/posts/:id', async (req, res) => {
-    const { id } = req.params;
-
+router.put('/:id', async (req, res) => {
     try {
-        const updatePosts = await Posts.update(id);
+        console.log(req.body);
+        const updatePosts = await Posts.update(req.params.id, req.body);
+        console.log(updatePosts);
         if (updatePosts) {
-            res.json(updatePosts)
+            res.status(200).json(updatePosts);
         } else {
             res.status(404).json({ message: "The post with the specified ID does not exist." });
         }
     } catch (error) {
-        res.status(500).json({ err: "Try again." });
+        res.status(500).json({ error: "The post information could not be modified." });
     }
 });
 
