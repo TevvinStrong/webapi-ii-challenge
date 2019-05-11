@@ -7,8 +7,13 @@ const router = express.Router();
 //*** Routes ***\\
 
 // Post
-router.post('', (req, res) => {
-
+router.post('/api/posts', async (req, res) => {
+    try {
+        const createPosts = await Posts.insert(req.body);
+        res.status(201).json(createPosts);
+    } catch (error) {
+        res.status(400).json({ errorMessage: "Please provide title and contents for the posts." });
+    }
 });
 
 // Get
@@ -47,8 +52,19 @@ router.delete('', (req, res) => {
 });
 
 // Put
-router.put('', (req, res) => {
+router.put('/api/posts/:id', async (req, res) => {
+    const { id } = req.params;
 
+    try {
+        const updatePosts = await Posts.update(id);
+        if (updatePosts) {
+            res.json(updatePosts)
+        } else {
+            res.status(404).json({ message: "The post with the specified ID does not exist." });
+        }
+    } catch (error) {
+        res.status(500).json({ err: "Try again." });
+    }
 });
 
 
